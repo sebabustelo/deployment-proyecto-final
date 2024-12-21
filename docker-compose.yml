@@ -1,0 +1,35 @@
+name: ipmagna
+
+services:
+  ipmagna:
+    build:
+       context: .
+       dockerfile: Dockerfile   
+    image: ipmagna
+    hostname: ipmagna
+    container_name: ipmagna
+    restart: unless-stopped
+    #tty: true
+    ports:
+     - 80:80
+     - 443:443
+    environment:
+      - DOMAIN=ipmagna.local
+      - DOCUMENT_ROOT=/public
+      #- http_proxy=http://www-proxy.mrec.ar:8080
+      #- https_proxy=http://www-proxy.mrec.ar:8080
+    volumes:
+      # development directory      
+      - /sites/ipmagna/:/var/www/
+      # expose nginx logs to host
+      - ./docker/log/:/var/log/nginx/
+       # expose nginx and php config to host
+      - ./docker/etc/:/docker/etc/ 
+      - /etc/localtime:/etc/localtime:ro  
+      #- ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - desarrollo  
+networks:
+  desarrollo:
+    external: true
+   
